@@ -4,10 +4,7 @@ import 'package:hive_flutter/adapters.dart';
 abstract class TransactionLocalService {
   Future<List<TransactionModel>> getAllTransactions();
 
-  Future<void> addTransaction({
-    required String transactionId,
-    required TransactionModel transaction,
-  });
+  Future<void> addTransaction({required TransactionModel transaction});
 
   Future<void> deleteTransaction({required String transactionId});
 
@@ -15,7 +12,7 @@ abstract class TransactionLocalService {
 }
 
 class TransactionLocalServiceImpl extends TransactionLocalService {
-  final String _boxName = 'transaction_box';
+  final String _boxName = 'transactions_box';
 
   @override
   Future<List<TransactionModel>> getAllTransactions() async {
@@ -28,12 +25,9 @@ class TransactionLocalServiceImpl extends TransactionLocalService {
   }
 
   @override
-  Future<void> addTransaction({
-    required String transactionId,
-    required TransactionModel transaction,
-  }) async {
+  Future<void> addTransaction({required TransactionModel transaction}) async {
     final transactionsBox = Hive.box(_boxName);
-    await transactionsBox.put(transactionId, transaction);
+    await transactionsBox.put(transaction.id, transaction);
   }
 
   @override

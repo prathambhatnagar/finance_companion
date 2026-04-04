@@ -1,17 +1,16 @@
-import 'package:finance_companion/domain/entities/transaction_entity.dart';
+import 'package:finance_companion/domain/entities/transaction/transaction_entity.dart';
 
 abstract class TransactionEvent {}
 
 class GetAllTransactionEvent extends TransactionEvent {}
 
-class FetchAllDebitTransactionEvent extends TransactionEvent {}
+class GetAllDebitTransactionEvent extends TransactionEvent {}
 
-class FetchAllCreditTransactionEvent extends TransactionEvent {}
+class GetAllCreditTransactionEvent extends TransactionEvent {}
 
 class AddTransactionEvent extends TransactionEvent {
-  AddTransactionEvent({required this.transactionId, required this.transaction});
+  AddTransactionEvent({required this.transaction});
   final TransactionEntity transaction;
-  final String transactionId;
 }
 
 class DeleteTransactionEvent extends TransactionEvent {

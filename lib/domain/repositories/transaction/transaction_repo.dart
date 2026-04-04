@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:finance_companion/core/error/failure.dart';
-import 'package:finance_companion/domain/entities/transaction_entity.dart';
+import 'package:finance_companion/domain/entities/transaction/transaction_entity.dart';
 
 abstract class TransactionRepo {
   Future<Either<Failure, List<TransactionEntity>>> getAllTransactions();
@@ -10,7 +10,6 @@ abstract class TransactionRepo {
   // Future<Either<Failure, List<TransactionEntity>>> getAllDebitTransactions();
 
   Future<Either<Failure, void>> addTransaction({
-    required String id,
     required TransactionEntity transaction,
   });
 

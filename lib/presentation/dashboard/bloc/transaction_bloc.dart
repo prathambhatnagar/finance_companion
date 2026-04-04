@@ -48,12 +48,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     AddTransactionEvent event,
     Emitter<TransactionState> emit,
   ) async {
-    final result = await addTransactionUsecase.call(
-      param: AddTransactionPram(
-        id: event.transactionId,
-        transaction: event.transaction,
-      ),
-    );
+    final result = await addTransactionUsecase.call(param: event.transaction);
     result.fold((failure) {
       emit(TransactionErrorState(message: failure.message));
     }, (_) => add(GetAllTransactionEvent()));

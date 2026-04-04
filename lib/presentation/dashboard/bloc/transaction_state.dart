@@ -1,4 +1,4 @@
-import 'package:finance_companion/domain/entities/transaction_entity.dart';
+import 'package:finance_companion/domain/entities/transaction/transaction_entity.dart';
 
 abstract class TransactionState {}
 

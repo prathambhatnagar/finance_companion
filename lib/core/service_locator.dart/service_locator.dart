@@ -1,5 +1,8 @@
+import 'package:finance_companion/data/repositories/account/account_repo_impl.dart';
 import 'package:finance_companion/data/repositories/transaction/transaction_repo_impl.dart';
-import 'package:finance_companion/data/services/transactions_service/transactions_local_service.dart';
+import 'package:finance_companion/data/services/account_service/local_account_service.dart';
+import 'package:finance_companion/data/services/transactions_service/local_transactions_service.dart';
+import 'package:finance_companion/domain/repositories/account_repo/account_repo.dart';
 import 'package:finance_companion/domain/repositories/transaction/transaction_repo.dart';
 import 'package:finance_companion/domain/usecases/transaction/add_transaction_usecase.dart';
 import 'package:finance_companion/domain/usecases/transaction/delete_transaction_usecase.dart';
@@ -10,7 +13,6 @@ final serviceLocator = GetIt.instance;
 
 Future<void> serviceLocatorInit() async {
   // Transactions
-
   serviceLocator.registerSingleton<TransactionLocalService>(
     TransactionLocalServiceImpl(),
   );
@@ -35,5 +37,15 @@ Future<void> serviceLocatorInit() async {
     DeleteTransactionUsecase(
       transactionRepo: serviceLocator<TransactionRepo>(),
     ),
+  );
+
+  // Account
+
+  serviceLocator.registerSingleton<LocalAccountService>(
+    LocalAccountServiceImpl(),
+  );
+
+  serviceLocator.registerSingleton<AccountRepo>(
+    AccountRepoImpl(localAccountService: serviceLocator<LocalAccountService>()),
   );
 }

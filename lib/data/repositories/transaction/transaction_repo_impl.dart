@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:finance_companion/core/error/failure.dart';
 import 'package:finance_companion/data/models/transaction_model/transaction_model.dart';
-import 'package:finance_companion/data/services/transactions_service/transactions_local_service.dart';
-import 'package:finance_companion/domain/entities/transaction_entity.dart';
+import 'package:finance_companion/data/services/transactions_service/local_transactions_service.dart';
+import 'package:finance_companion/domain/entities/transaction/transaction_entity.dart';
 import 'package:finance_companion/domain/repositories/transaction/transaction_repo.dart';
 
 class TransactionRepoImpl extends TransactionRepo {
@@ -13,12 +13,10 @@ class TransactionRepoImpl extends TransactionRepo {
 
   @override
   Future<Either<Failure, void>> addTransaction({
-    required String id,
     required TransactionEntity transaction,
   }) async {
     try {
       final result = await transactionsLocalService.addTransaction(
-        transactionId: id,
         transaction: TransactionModel.fromEntity(
           transactionEntity: transaction,
         ),
