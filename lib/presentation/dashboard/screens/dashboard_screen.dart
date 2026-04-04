@@ -1,3 +1,4 @@
+import 'package:finance_companion/presentation/dashboard/widgets/current_balance_tile.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -5,6 +6,14 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Column(
+        children: [
+          CurrentBalanceTile(),
+          ListView.builder(itemBuilder: itemBuilder),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: () {}),
+    );
   }
 }

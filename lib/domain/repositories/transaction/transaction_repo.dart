@@ -5,11 +5,18 @@ import 'package:finance_companion/domain/entities/transaction_entity.dart';
 abstract class TransactionRepo {
   Future<Either<Failure, List<TransactionEntity>>> getAllTransactions();
 
-  Future<Either<Failure, void>> addTransaction();
+  // Future<Either<Failure, List<TransactionEntity>>> getAllCreditTransactions();
+
+  // Future<Either<Failure, List<TransactionEntity>>> getAllDebitTransactions();
+
+  Future<Either<Failure, void>> addTransaction({
+    required String id,
+    required TransactionEntity transaction,
+  });
 
   Future<Either<Failure, void>> deleteTransactions({required String id});
 
-  Future<Either<Failure, List<TransactionEntity>>> searchTransaction({
+  Future<Either<Failure, TransactionEntity>> getTransaction({
     required String query,
   });
 }

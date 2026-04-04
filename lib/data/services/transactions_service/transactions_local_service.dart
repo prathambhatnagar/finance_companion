@@ -1,10 +1,10 @@
 import 'package:finance_companion/data/models/transaction_model/transaction_model.dart';
 import 'package:hive_flutter/adapters.dart';
 
-abstract class TransactionsLocalService {
+abstract class TransactionLocalService {
   Future<List<TransactionModel>> getAllTransactions();
 
-  Future<void> saveTransaction({
+  Future<void> addTransaction({
     required String transactionId,
     required TransactionModel transaction,
   });
@@ -14,7 +14,7 @@ abstract class TransactionsLocalService {
   Future<TransactionModel> getTransaction({required String transactionId});
 }
 
-class TransactionLocalServiceImpl extends TransactionsLocalService {
+class TransactionLocalServiceImpl extends TransactionLocalService {
   final String _boxName = 'transaction_box';
 
   @override
@@ -28,7 +28,7 @@ class TransactionLocalServiceImpl extends TransactionsLocalService {
   }
 
   @override
-  Future<void> saveTransaction({
+  Future<void> addTransaction({
     required String transactionId,
     required TransactionModel transaction,
   }) async {
