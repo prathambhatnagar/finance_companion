@@ -13,6 +13,7 @@ class TransactionModel {
     required this.type,
     required this.timeStamp,
     required this.category,
+    required this.accountId,
   });
 
   @HiveField(0)
@@ -33,6 +34,9 @@ class TransactionModel {
   @HiveField(5)
   CategoryModel category;
 
+  @HiveField(6)
+  String accountId;
+
   factory TransactionModel.fromEntity({
     required TransactionEntity transactionEntity,
   }) {
@@ -40,13 +44,14 @@ class TransactionModel {
       id: transactionEntity.id,
       note: transactionEntity.note,
       amount: transactionEntity.amount,
-      type: transactionEntity.type == TransactionTypeEntity.credit
-          ? TransactionTypeModel.credit
-          : TransactionTypeModel.debit,
+      type: transactionEntity.type == TransactionTypeEntity.income
+          ? TransactionTypeModel.income
+          : TransactionTypeModel.expense,
       timeStamp: transactionEntity.timeStamp,
       category: CategoryModel.fromEntity(
         categoryEntity: transactionEntity.category,
       ),
+      accountId: transactionEntity.accountId,
     );
   }
   TransactionEntity toEntity() {
@@ -54,11 +59,12 @@ class TransactionModel {
       id: id,
       note: note,
       amount: amount,
-      type: type == TransactionTypeModel.credit
-          ? TransactionTypeEntity.credit
-          : TransactionTypeEntity.debit,
+      type: type == TransactionTypeModel.income
+          ? TransactionTypeEntity.income
+          : TransactionTypeEntity.expense,
       timeStamp: timeStamp,
       category: category.toEntity(),
+      accountId: accountId,
     );
   }
 }
@@ -66,7 +72,7 @@ class TransactionModel {
 @HiveType(typeId: 2)
 enum TransactionTypeModel {
   @HiveField(0)
-  credit,
+  income,
   @HiveField(1)
-  debit,
+  expense,
 }

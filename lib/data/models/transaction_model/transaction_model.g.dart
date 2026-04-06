@@ -23,13 +23,14 @@ class TransactionModelAdapter extends TypeAdapter<TransactionModel> {
       type: fields[1] as TransactionTypeModel,
       timeStamp: fields[4] as DateTime,
       category: fields[5] as CategoryModel,
+      accountId: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, TransactionModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class TransactionModelAdapter extends TypeAdapter<TransactionModel> {
       ..writeByte(4)
       ..write(obj.timeStamp)
       ..writeByte(5)
-      ..write(obj.category);
+      ..write(obj.category)
+      ..writeByte(6)
+      ..write(obj.accountId);
   }
 
   @override
@@ -63,21 +66,21 @@ class TransactionTypeModelAdapter extends TypeAdapter<TransactionTypeModel> {
   TransactionTypeModel read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return TransactionTypeModel.credit;
+        return TransactionTypeModel.income;
       case 1:
-        return TransactionTypeModel.debit;
+        return TransactionTypeModel.expense;
       default:
-        return TransactionTypeModel.credit;
+        return TransactionTypeModel.income;
     }
   }
 
   @override
   void write(BinaryWriter writer, TransactionTypeModel obj) {
     switch (obj) {
-      case TransactionTypeModel.credit:
+      case TransactionTypeModel.income:
         writer.writeByte(0);
         break;
-      case TransactionTypeModel.debit:
+      case TransactionTypeModel.expense:
         writer.writeByte(1);
         break;
     }

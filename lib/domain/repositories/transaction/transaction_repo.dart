@@ -13,7 +13,9 @@ abstract class TransactionRepo {
     required TransactionEntity transaction,
   });
 
-  Future<Either<Failure, void>> deleteTransactions({required String id});
+  Future<Either<Failure, void>> deleteTransactions({
+    required TransactionEntity transaction,
+  });
 
   Future<Either<Failure, TransactionEntity>> getTransaction({
     required String query,

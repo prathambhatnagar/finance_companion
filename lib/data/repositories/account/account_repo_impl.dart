@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:finance_companion/core/error/failure.dart';
 import 'package:finance_companion/data/services/account_service/local_account_service.dart';
@@ -45,7 +47,7 @@ class AccountRepoImpl extends AccountRepo {
     required double newBalance,
   }) async {
     try {
-      final result = await localAccountService.updataAccountBalance(
+      final result = await localAccountService.updateAccountBalance(
         id: id,
         newBalance: newBalance,
       );

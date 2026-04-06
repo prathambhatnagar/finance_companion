@@ -2,11 +2,15 @@ import 'package:finance_companion/core/usecase/usecase.dart';
 import 'package:finance_companion/domain/usecases/transaction/add_transaction_usecase.dart';
 import 'package:finance_companion/domain/usecases/transaction/delete_transaction_usecase.dart';
 import 'package:finance_companion/domain/usecases/transaction/get_all_transaction_usecase.dart';
-import 'package:finance_companion/presentation/dashboard/bloc/transaction_event.dart';
-import 'package:finance_companion/presentation/dashboard/bloc/transaction_state.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_event.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
+  GetAllTransactionUsecase getAllTransactionUsecase;
+  AddTransactionUsecase addTransactionUsecase;
+  DeleteTransactionUsecase deleteTransactionUsecase;
+
   TransactionBloc({
     required this.getAllTransactionUsecase,
     required this.addTransactionUsecase,
@@ -24,10 +28,6 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       (event, emit) => _onDeleteTransactionEvent(event, emit),
     );
   }
-
-  GetAllTransactionUsecase getAllTransactionUsecase;
-  AddTransactionUsecase addTransactionUsecase;
-  DeleteTransactionUsecase deleteTransactionUsecase;
 
   Future<void> _onGetAllTransactionEvent(
     GetAllTransactionEvent event,
@@ -59,7 +59,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     Emitter<TransactionState> emit,
   ) async {
     final result = await deleteTransactionUsecase.call(
-      param: event.transactionId,
+      param: event.transaction,
     );
     result.fold((failure) {
       emit(TransactionErrorState(message: failure.message));

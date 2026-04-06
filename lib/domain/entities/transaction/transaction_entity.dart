@@ -8,6 +8,7 @@ class TransactionEntity {
     required this.type,
     required this.timeStamp,
     required this.category,
+    required this.accountId,
   });
 
   final String id;
@@ -16,6 +17,7 @@ class TransactionEntity {
   final String note;
   final DateTime timeStamp;
   final TransactionCategoryEntity category;
+  final String accountId;
 }
 
-enum TransactionTypeEntity { credit, debit }
+enum TransactionTypeEntity { income, expense }

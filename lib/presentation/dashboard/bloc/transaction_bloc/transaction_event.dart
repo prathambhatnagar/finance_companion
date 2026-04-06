@@ -14,6 +14,6 @@ class AddTransactionEvent extends TransactionEvent {
 }
 
 class DeleteTransactionEvent extends TransactionEvent {
-  DeleteTransactionEvent({required this.transactionId});
-  final String transactionId;
+  DeleteTransactionEvent({required this.transaction});
+  final TransactionEntity transaction;
 }

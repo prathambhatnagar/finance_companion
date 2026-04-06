@@ -1,7 +1,7 @@
 import 'package:finance_companion/core/widgets/error_tile.dart';
 import 'package:finance_companion/core/widgets/loader.dart';
-import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc.dart';
-import 'package:finance_companion/presentation/dashboard/bloc/transaction_state.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_bloc.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_state.dart';
 import 'package:finance_companion/presentation/dashboard/widgets/transaction_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

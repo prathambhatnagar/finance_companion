@@ -41,6 +41,7 @@ dependencies:
   build_runner: ^2.5.4
   dartz: ^0.10.1
   get_it: ^9.2.1
+  dropdown_search: ^6.0.2
 
 dev_dependencies:
   flutter_test:

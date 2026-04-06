@@ -1,11 +1,15 @@
 import 'package:finance_companion/core/service_locator.dart/service_locator.dart';
+import 'package:finance_companion/data/models/account_model/account_model.dart';
 import 'package:finance_companion/data/models/transaction_model/category_model.dart';
 import 'package:finance_companion/data/models/transaction_model/transaction_model.dart';
+import 'package:finance_companion/domain/usecases/account/get_accounts_usecase.dart';
 import 'package:finance_companion/domain/usecases/transaction/add_transaction_usecase.dart';
 import 'package:finance_companion/domain/usecases/transaction/delete_transaction_usecase.dart';
 import 'package:finance_companion/domain/usecases/transaction/get_all_transaction_usecase.dart';
-import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc.dart';
-import 'package:finance_companion/presentation/dashboard/bloc/transaction_event.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_bloc.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_event.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_bloc.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_event.dart';
 import 'package:finance_companion/presentation/dashboard/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,12 +26,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TransactionBloc(
-        getAllTransactionUsecase: serviceLocator<GetAllTransactionUsecase>(),
-        addTransactionUsecase: serviceLocator<AddTransactionUsecase>(),
-        deleteTransactionUsecase: serviceLocator<DeleteTransactionUsecase>(),
-      )..add(GetAllTransactionEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => TransactionBloc(
+            getAllTransactionUsecase:
+                serviceLocator<GetAllTransactionUsecase>(),
+            addTransactionUsecase: serviceLocator<AddTransactionUsecase>(),
+            deleteTransactionUsecase:
+                serviceLocator<DeleteTransactionUsecase>(),
+          )..add(GetAllTransactionEvent()),
+        ),
+
+        BlocProvider(
+          create: (context) => AccountBloc(
+            getAccountsUsecase: serviceLocator<GetAccountsUsecase>(),
+          )..add(GetAccountsEvent()),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: DashboardScreen(),
@@ -37,13 +53,12 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> init() async {
-  await serviceLocatorInit();
-
   await Hive.initFlutter();
-
+  await serviceLocatorInit();
   Hive.registerAdapter(TransactionModelAdapter());
   Hive.registerAdapter(TransactionTypeModelAdapter());
   Hive.registerAdapter(CategoryModelAdapter());
-
+  Hive.registerAdapter(AccountModelAdapter());
   await Hive.openBox('transactions_box');
+  await Hive.openBox('account_box');
 }

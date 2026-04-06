@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:finance_companion/core/utility/id_generator.dart';
 import 'package:finance_companion/data/models/account_model/account_model.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -7,7 +9,7 @@ abstract class LocalAccountService {
 
   Future<AccountModel> getAccountById(String id);
 
-  Future<void> updataAccountBalance({
+  Future<void> updateAccountBalance({
     required String id,
     required double newBalance,
   });
@@ -16,27 +18,27 @@ abstract class LocalAccountService {
 }
 
 class LocalAccountServiceImpl extends LocalAccountService {
-  final _boxName = 'account_name';
+  final _boxName = 'account_box';
 
   @override
   Future<List<AccountModel>> getAccounts() async {
-    final box = Hive.box<AccountModel>(_boxName);
-    return box.values.toList();
+    final box = Hive.box(_boxName);
+    return box.values.cast<AccountModel>().toList();
   }
 
   @override
   Future<AccountModel> getAccountById(String id) async {
-    final box = Hive.box<AccountModel>(_boxName);
+    final box = Hive.box(_boxName);
     final account = box.get(id);
     return account!;
   }
 
   @override
-  Future<void> updataAccountBalance({
+  Future<void> updateAccountBalance({
     required String id,
     required double newBalance,
   }) async {
-    final box = Hive.box<AccountModel>(_boxName);
+    final box = Hive.box(_boxName);
     final account = box.get(id);
     if (account != null) {
       final updatedAccount = AccountModel(
@@ -51,8 +53,13 @@ class LocalAccountServiceImpl extends LocalAccountService {
 
   @override
   Future<void> seedDefaultAccounts() async {
-    final box = Hive.box<AccountModel>(_boxName);
+    log("shit");
+
+    final box = await Hive.openBox(_boxName);
+    log("seedDefaultAccounts");
+
     if (box.isEmpty) {
+      log("box is empty");
       await box.addAll([
         AccountModel(
           id: generateId(),

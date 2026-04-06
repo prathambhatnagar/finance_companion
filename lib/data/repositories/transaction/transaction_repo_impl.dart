@@ -29,10 +29,14 @@ class TransactionRepoImpl extends TransactionRepo {
   }
 
   @override
-  Future<Either<Failure, void>> deleteTransactions({required String id}) async {
+  Future<Either<Failure, void>> deleteTransactions({
+    required TransactionEntity transaction,
+  }) async {
     try {
       final result = await transactionsLocalService.deleteTransaction(
-        transactionId: id,
+        transaction: TransactionModel.fromEntity(
+          transactionEntity: transaction,
+        ),
       );
       return right(result);
     } catch (e) {

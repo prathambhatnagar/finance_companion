@@ -6,7 +6,7 @@ abstract class TransactionLocalService {
 
   Future<void> addTransaction({required TransactionModel transaction});
 
-  Future<void> deleteTransaction({required String transactionId});
+  Future<void> deleteTransaction({required TransactionModel transaction});
 
   Future<TransactionModel> getTransaction({required String transactionId});
 }
@@ -20,7 +20,6 @@ class TransactionLocalServiceImpl extends TransactionLocalService {
     final transactions = transactionsBox.values
         .cast<TransactionModel>()
         .toList();
-
     return transactions;
   }
 
@@ -31,9 +30,11 @@ class TransactionLocalServiceImpl extends TransactionLocalService {
   }
 
   @override
-  Future<void> deleteTransaction({required String transactionId}) async {
+  Future<void> deleteTransaction({
+    required TransactionModel transaction,
+  }) async {
     final transactionsBox = Hive.box(_boxName);
-    await transactionsBox.delete(transactionId);
+    await transactionsBox.delete(transaction.id);
   }
 
   @override
@@ -41,6 +42,6 @@ class TransactionLocalServiceImpl extends TransactionLocalService {
     required String transactionId,
   }) async {
     final transactionsBox = Hive.box(_boxName);
-    return await transactionsBox.get(transactionId);
+    return transactionsBox.get(transactionId);
   }
 }
