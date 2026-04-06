@@ -13,28 +13,27 @@ class AddTransactionUsecase extends Usecase<void, TransactionEntity> {
 
   final TransactionRepo transactionRepo;
   final AccountRepo accountRepo;
-
   @override
   Future<Either<Failure, void>> call({required TransactionEntity param}) async {
     final txResult = await transactionRepo.addTransaction(transaction: param);
 
     return txResult.fold((failure) => left(failure), (_) async {
-      final accountResult = await accountRepo.getAccountById(param.accountId);
+      final accountResult = await accountRepo.getAccountById(param.account.id);
 
-      return await accountResult.fold((failure) => Left(failure), (
-        account,
-      ) async {
-        double updatedBalace = account.balance;
+      return accountResult.fold((failure) => left(failure), (account) async {
+        double updatedBalance = account.balance;
+        double previousBalance = account.balance;
 
         if (param.type == TransactionTypeEntity.income) {
-          updatedBalace += param.amount;
+          updatedBalance += param.amount;
         } else {
-          updatedBalace -= param.amount;
+          updatedBalance -= param.amount;
         }
 
         return await accountRepo.updataAccountBalance(
           id: account.id,
-          newBalance: updatedBalace,
+          newBalance: updatedBalance,
+          previousBalance: previousBalance,
         );
       });
     });

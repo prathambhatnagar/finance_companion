@@ -9,8 +9,10 @@ class AccountModel {
     required this.id,
     required this.name,
     required this.balance,
+    this.previous,
     required this.colorHex,
   });
+
   @HiveField(0)
   final String id;
   @HiveField(1)
@@ -18,6 +20,8 @@ class AccountModel {
   @HiveField(2)
   final double balance;
   @HiveField(3)
+  final double? previous;
+  @HiveField(4)
   final String colorHex;
 
   AccountEntity toEntity() {

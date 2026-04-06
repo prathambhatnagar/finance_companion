@@ -16,13 +16,34 @@ class TransactionsContent extends StatelessWidget {
         if (state is TransactionLoadedState) {
           final transactions = state.transactionsList;
           if (transactions.isEmpty) return EmptyTransaction();
-          return Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: transactions.length,
-              itemBuilder: (context, index) =>
-                  TransactionTile(transaction: transactions[index]),
-            ),
+          return Column(
+            children: [
+              Padding(
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Activity',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    TextButton(
+                      child: Text('Show all', style: TextStyle(fontSize: 16)),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: transactions.length,
+                itemBuilder: (context, index) =>
+                    TransactionTile(transaction: transactions[index]),
+              ),
+            ],
           );
         } else if (state is TransactionLoadingState) {
           return Loader();

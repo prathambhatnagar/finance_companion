@@ -1,9 +1,13 @@
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:finance_companion/core/utility/id_generator.dart';
 import 'package:finance_companion/core/widgets/loader.dart';
 import 'package:finance_companion/domain/entities/account/account_entity.dart';
+import 'package:finance_companion/domain/entities/transaction/category_entity.dart';
+import 'package:finance_companion/domain/entities/transaction/transaction_entity.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_bloc.dart';
-import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_event.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_state.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_bloc.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,6 +19,8 @@ class AddTransactionScreen extends StatefulWidget {
 }
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
+  GlobalKey<FormState> formeKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -22,33 +28,26 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   @override
   void dispose() {
+    amountController.dispose();
+    noteController.dispose();
     super.dispose();
   }
 
   List<bool> isSelected = [true, false];
   DateTime? selectedDate = DateTime.now();
-  String? selectedCategory;
+  TransactionCategoryEntity? selectedCategory;
   AccountEntity? selectedAccount;
 
-  final List<String> spendingCategories = [
-    'Housing',
-    'Utilities',
-    'Groceries',
-    'Transportation',
-    'Entertainment',
-    'Shopping',
-    'Travel',
-    'Health',
-    'Education',
-    'Savings',
-    'Miscellaneous',
-  ];
+  TextEditingController amountController = TextEditingController();
+
+  TextEditingController noteController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Add Transaction'), centerTitle: true),
       body: Form(
+        key: formeKey,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -117,25 +116,38 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               SizedBox(height: 10),
 
               TextFormField(
+                controller: amountController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Enter amount';
+                  if (double.tryParse(value) == null) return 'Invalid amount';
+                  return null;
+                },
               ),
 
               SizedBox(height: 20),
               _title('Category'),
               SizedBox(height: 10),
 
-              DropdownSearch<String>(
+              DropdownSearch<TransactionCategoryEntity>(
                 items: (filter, _) => spendingCategories
                     .where(
-                      (item) =>
-                          item.toLowerCase().contains(filter.toLowerCase()),
+                      (item) => item.name.toLowerCase().contains(
+                        filter.toLowerCase(),
+                      ),
                     )
                     .toList(),
+
                 selectedItem: selectedCategory,
+
+                itemAsString: (item) => item.name,
+
+                compareFn: (item, selectedItem) => item.id == selectedItem.id,
 
                 decoratorProps: DropDownDecoratorProps(
                   decoration: InputDecoration(
@@ -173,6 +185,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               SizedBox(height: 20),
               _title('Account'),
               SizedBox(height: 10),
+
               BlocBuilder<AccountBloc, AccountState>(
                 builder: (context, state) {
                   if (state is AccountLoadingState) {
@@ -181,7 +194,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     return Text(state.message);
                   } else if (state is AccountLoadedState) {
                     final accounts = state.accounts;
-                    if (accounts.isEmpty) return Text('No Accouts Found');
+
+                    if (accounts.isEmpty) return Text('No Accounts Found');
+
+                    selectedAccount ??= accounts.first;
+
                     return DropdownButtonFormField<AccountEntity>(
                       isExpanded: true,
                       borderRadius: BorderRadius.circular(10),
@@ -196,14 +213,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           vertical: 14,
                         ),
                       ),
-
                       items: accounts.map((account) {
                         return DropdownMenuItem<AccountEntity>(
                           value: account,
                           child: Text(account.name),
                         );
                       }).toList(),
-
                       onChanged: (value) {
                         setState(() {
                           selectedAccount = value;
@@ -213,6 +228,18 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   }
                   return SizedBox.shrink();
                 },
+              ),
+              SizedBox(height: 20),
+              _title('Note'),
+              SizedBox(height: 10),
+
+              TextFormField(
+                controller: noteController,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
               ),
               Spacer(),
               Center(
@@ -228,7 +255,34 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    if (!formeKey.currentState!.validate()) return;
+
+                    if (selectedAccount == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Please select an account')),
+                      );
+                      return;
+                    }
+
+                    final transaction = TransactionEntity(
+                      id: generateId(),
+                      note: noteController.text,
+                      amount: double.parse(amountController.text),
+                      type: isSelected[0]
+                          ? TransactionTypeEntity.income
+                          : TransactionTypeEntity.expense,
+                      timeStamp: selectedDate ?? DateTime.now(),
+                      category: selectedCategory,
+                      account: selectedAccount!,
+                    );
+
+                    context.read<TransactionBloc>().add(
+                      AddTransactionEvent(transaction: transaction),
+                    );
+
+                    Navigator.pop(context);
+                  },
                   child: Text(
                     'Save',
                     style: TextStyle(color: Colors.white, fontSize: 20),

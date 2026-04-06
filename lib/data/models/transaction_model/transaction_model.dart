@@ -1,3 +1,4 @@
+import 'package:finance_companion/data/models/account_model/account_model.dart';
 import 'package:finance_companion/data/models/transaction_model/category_model.dart';
 import 'package:finance_companion/domain/entities/transaction/transaction_entity.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -12,8 +13,8 @@ class TransactionModel {
     required this.amount,
     required this.type,
     required this.timeStamp,
-    required this.category,
-    required this.accountId,
+    this.category,
+    required this.account,
   });
 
   @HiveField(0)
@@ -32,10 +33,10 @@ class TransactionModel {
   DateTime timeStamp;
 
   @HiveField(5)
-  CategoryModel category;
+  CategoryModel? category;
 
   @HiveField(6)
-  String accountId;
+  AccountModel account;
 
   factory TransactionModel.fromEntity({
     required TransactionEntity transactionEntity,
@@ -48,10 +49,12 @@ class TransactionModel {
           ? TransactionTypeModel.income
           : TransactionTypeModel.expense,
       timeStamp: transactionEntity.timeStamp,
-      category: CategoryModel.fromEntity(
-        categoryEntity: transactionEntity.category,
-      ),
-      accountId: transactionEntity.accountId,
+      category: transactionEntity.category != null
+          ? CategoryModel.fromEntity(
+              categoryEntity: transactionEntity.category!,
+            )
+          : null,
+      account: AccountModel.fromEntity(transactionEntity.account),
     );
   }
   TransactionEntity toEntity() {
@@ -63,8 +66,8 @@ class TransactionModel {
           ? TransactionTypeEntity.income
           : TransactionTypeEntity.expense,
       timeStamp: timeStamp,
-      category: category.toEntity(),
-      accountId: accountId,
+      category: category?.toEntity(),
+      account: account.toEntity(),
     );
   }
 }

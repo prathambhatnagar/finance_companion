@@ -1,4 +1,5 @@
 import 'package:finance_companion/core/service_locator.dart/service_locator.dart';
+import 'package:finance_companion/core/utility/id_generator.dart';
 import 'package:finance_companion/data/models/account_model/account_model.dart';
 import 'package:finance_companion/data/models/transaction_model/category_model.dart';
 import 'package:finance_companion/data/models/transaction_model/transaction_model.dart';
@@ -61,4 +62,29 @@ Future<void> init() async {
   Hive.registerAdapter(AccountModelAdapter());
   await Hive.openBox('transactions_box');
   await Hive.openBox('account_box');
+
+  final box = await Hive.openBox('account_box');
+
+  if (box.isEmpty) {
+    await box.addAll([
+      AccountModel(
+        id: generateId(),
+        name: 'cash',
+        balance: 0.0,
+        colorHex: '0xFF4CAF50',
+      ),
+      AccountModel(
+        id: generateId(),
+        name: 'Savings',
+        balance: 0.0,
+        colorHex: '0xFF2196F3',
+      ),
+      AccountModel(
+        id: generateId(),
+        name: 'Card',
+        balance: 0.0,
+        colorHex: '0xFFF44336',
+      ),
+    ]);
+  }
 }

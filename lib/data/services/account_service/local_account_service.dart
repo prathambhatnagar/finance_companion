@@ -12,6 +12,7 @@ abstract class LocalAccountService {
   Future<void> updateAccountBalance({
     required String id,
     required double newBalance,
+    required double previousBalance,
   });
 
   Future<void> seedDefaultAccounts();
@@ -37,6 +38,7 @@ class LocalAccountServiceImpl extends LocalAccountService {
   Future<void> updateAccountBalance({
     required String id,
     required double newBalance,
+    required double previousBalance,
   }) async {
     final box = Hive.box(_boxName);
     final account = box.get(id);
@@ -44,8 +46,9 @@ class LocalAccountServiceImpl extends LocalAccountService {
       final updatedAccount = AccountModel(
         id: account.id,
         name: account.name,
-        balance: account.balance,
+        balance: newBalance,
         colorHex: account.colorHex,
+        previous: account.balance,
       );
       await box.put(id, updatedAccount);
     }
@@ -53,10 +56,7 @@ class LocalAccountServiceImpl extends LocalAccountService {
 
   @override
   Future<void> seedDefaultAccounts() async {
-    log("shit");
-
     final box = await Hive.openBox(_boxName);
-    log("seedDefaultAccounts");
 
     if (box.isEmpty) {
       log("box is empty");

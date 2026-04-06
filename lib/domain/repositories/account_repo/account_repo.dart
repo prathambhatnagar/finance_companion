@@ -10,6 +10,7 @@ abstract class AccountRepo {
   Future<Either<Failure, void>> updataAccountBalance({
     required String id,
     required double newBalance,
+    required double previousBalance,
   });
 
   Future<Either<Failure, void>> seedDefaultAccounts();

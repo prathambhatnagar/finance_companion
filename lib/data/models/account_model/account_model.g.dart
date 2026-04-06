@@ -20,14 +20,15 @@ class AccountModelAdapter extends TypeAdapter<AccountModel> {
       id: fields[0] as String,
       name: fields[1] as String,
       balance: fields[2] as double,
-      colorHex: fields[3] as String,
+      previous: fields[3] as double?,
+      colorHex: fields[4] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, AccountModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,6 +36,8 @@ class AccountModelAdapter extends TypeAdapter<AccountModel> {
       ..writeByte(2)
       ..write(obj.balance)
       ..writeByte(3)
+      ..write(obj.previous)
+      ..writeByte(4)
       ..write(obj.colorHex);
   }
 

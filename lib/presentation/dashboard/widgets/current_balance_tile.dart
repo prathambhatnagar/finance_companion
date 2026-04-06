@@ -1,30 +1,106 @@
+import 'package:finance_companion/domain/entities/account/account_entity.dart';
 import 'package:flutter/material.dart';
 
-class CurrentBalanceTile extends StatefulWidget {
-  const CurrentBalanceTile({super.key});
+class CurrentBalanceCard extends StatelessWidget {
+  const CurrentBalanceCard({super.key, required this.account});
 
-  @override
-  State<CurrentBalanceTile> createState() => _CurrentBalanceTileState();
-}
+  final AccountEntity account;
 
-class _CurrentBalanceTileState extends State<CurrentBalanceTile> {
-  bool isBalanceVisible = false;
   @override
   Widget build(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    return GestureDetector(
-      onTap: () => setState(() => isBalanceVisible = !isBalanceVisible),
-      child: SizedBox(
-        child: Container(
-          color: Colors.amber,
-          height: mediaQuery.size.height / 3,
-          child: Center(
-            child: Text(
-              isBalanceVisible ? ' \$4,56,486' : 'XXX XXX XXX',
-              style: TextStyle(fontSize: 24, letterSpacing: 1.6),
+    final previous = account.previous ?? account.balance;
+    final difference = account.balance - previous;
+    final isIncrease = difference >= 0;
+    final percent = previous != 0 ? (difference / previous) * 100 : 0;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.all(20),
+      height: 160,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF2C1A4D), Color(0xFF6A3DE8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Stack(
+        children: [
+          /// Subtle background pattern
+          Positioned(
+            right: -30,
+            top: -20,
+            child: Container(
+              height: 120,
+              width: 120,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(20),
+              ),
             ),
           ),
-        ),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// Top Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Total balance', style: TextStyle(color: Colors.white)),
+                  Row(
+                    children: [
+                      Text(
+                        account.name,
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      SizedBox(width: 4),
+                      Icon(Icons.chevron_right, color: Colors.white70),
+                    ],
+                  ),
+                ],
+              ),
+
+              const Spacer(),
+
+              Text(
+                '\$${account.balance.toStringAsFixed(2)}',
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 1.5,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              Row(
+                children: [
+                  Text(
+                    isIncrease ? 'Increase' : 'Decrease',
+                    style: const TextStyle(color: Colors.white70),
+                  ),
+                  const SizedBox(width: 6),
+                  Icon(
+                    isIncrease ? Icons.arrow_upward : Icons.arrow_downward,
+                    size: 16,
+                    color: isIncrease ? Colors.greenAccent : Colors.redAccent,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${percent.toStringAsFixed(1)}%',
+                    style: TextStyle(
+                      color: isIncrease ? Colors.greenAccent : Colors.redAccent,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:finance_companion/core/usecase/usecase.dart';
 import 'package:finance_companion/domain/usecases/transaction/add_transaction_usecase.dart';
 import 'package:finance_companion/domain/usecases/transaction/delete_transaction_usecase.dart';
@@ -36,6 +38,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     final result = await getAllTransactionUsecase.call(param: NoParam());
     result.fold(
       (failure) {
+        log('_onGetAllTransactionEvent ${failure.message}');
         emit(TransactionErrorState(message: failure.message));
       },
       (transactionsList) {
@@ -50,6 +53,8 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
   ) async {
     final result = await addTransactionUsecase.call(param: event.transaction);
     result.fold((failure) {
+      log('_onAddTransactionEvent ${failure.message}');
+
       emit(TransactionErrorState(message: failure.message));
     }, (_) => add(GetAllTransactionEvent()));
   }
