@@ -24,7 +24,6 @@ class DeleteTransactionUsecase extends Usecase<void, TransactionEntity> {
 
       return accountResult.fold((failure) => left(failure), (account) async {
         double updatedBalance = account.balance;
-        double previousBalance = account.balance;
 
         if (param.type == TransactionTypeEntity.income) {
           updatedBalance -= param.amount;
@@ -35,7 +34,6 @@ class DeleteTransactionUsecase extends Usecase<void, TransactionEntity> {
         return await accountRepo.updataAccountBalance(
           id: account.id,
           newBalance: updatedBalance,
-          previousBalance: previousBalance,
         );
       });
     });

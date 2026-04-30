@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:finance_companion/core/widgets/error_tile.dart';
 import 'package:finance_companion/core/widgets/loader.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_bloc.dart';
@@ -20,6 +22,7 @@ class BalanceCarousel extends StatelessWidget {
           } else if (state is AccountErrorgState) {
             return ErrorTile(error: state.message);
           } else if (state is AccountLoadedState) {
+            log("laoded blanacecards");
             return PageView.builder(
               itemCount: state.accounts.length,
               controller: PageController(),

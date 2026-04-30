@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:finance_companion/core/utility/id_generator.dart';
 import 'package:finance_companion/core/widgets/loader.dart';
@@ -5,11 +7,13 @@ import 'package:finance_companion/domain/entities/account/account_entity.dart';
 import 'package:finance_companion/domain/entities/transaction/category_entity.dart';
 import 'package:finance_companion/domain/entities/transaction/transaction_entity.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_bloc.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_event.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_state.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_bloc.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/adapters.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({super.key});
@@ -182,6 +186,43 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 },
               ),
 
+              // Flexible(
+              //   child: Stack(
+              //     children: [
+              //       Align(
+              //         alignment: Alignment.center,
+              //         child: Container(
+              //           height: 55,
+              //           decoration: BoxDecoration(
+              //             border: Border.all(
+              //               width: 2,
+              //               color: Colors.deepPurple,
+              //             ),
+              //             borderRadius: BorderRadius.circular(10),
+              //           ),
+              //         ),
+              //       ),
+
+              //       Align(
+              //         alignment: Alignment.center,
+
+              //         child: ListWheelScrollView.useDelegate(
+              //           physics: FixedExtentScrollPhysics(),
+
+              //           diameterRatio: 1,
+              //           itemExtent: 35,
+              //           childDelegate: ListWheelChildLoopingListDelegate(
+              //             children: [
+              //               Text('Card', style: TextStyle(fontSize: 28)),
+              //               Text('Cash', style: TextStyle(fontSize: 28)),
+              //               Text('Savings', style: TextStyle(fontSize: 28)),
+              //             ],
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               SizedBox(height: 20),
               _title('Account'),
               SizedBox(height: 10),
@@ -198,6 +239,47 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     if (accounts.isEmpty) return Text('No Accounts Found');
 
                     selectedAccount ??= accounts.first;
+
+                    // return Flexible(
+                    //   child: Stack(
+                    //     children: [
+                    //       Align(
+                    //         alignment: Alignment.center,
+                    //         child: Container(
+                    //           height: 55,
+                    //           decoration: BoxDecoration(
+                    //             border: Border.all(
+                    //               width: 2,
+                    //               color: Colors.deepPurple,
+                    //             ),
+                    //             borderRadius: BorderRadius.circular(10),
+                    //           ),
+                    //         ),
+                    //       ),
+
+                    //       Align(
+                    //         alignment: Alignment.center,
+
+                    //         child: ListWheelScrollView.useDelegate(
+                    //           physics: FixedExtentScrollPhysics(),
+
+                    //           diameterRatio: 1,
+                    //           itemExtent: 35,
+                    //           childDelegate: ListWheelChildLoopingListDelegate(
+                    //             children: [
+                    //               Text('Card', style: TextStyle(fontSize: 28)),
+                    //               Text('Cash', style: TextStyle(fontSize: 28)),
+                    //               Text(
+                    //                 'Savings',
+                    //                 style: TextStyle(fontSize: 28),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // );
 
                     return DropdownButtonFormField<AccountEntity>(
                       isExpanded: true,
@@ -229,6 +311,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   return SizedBox.shrink();
                 },
               ),
+
               SizedBox(height: 20),
               _title('Note'),
               SizedBox(height: 10),
@@ -280,6 +363,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     context.read<TransactionBloc>().add(
                       AddTransactionEvent(transaction: transaction),
                     );
+
+                    context.read<AccountBloc>().add(GetAccountsEvent());
 
                     Navigator.pop(context);
                   },

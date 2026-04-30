@@ -43,13 +43,11 @@ class AccountRepoImpl extends AccountRepo {
   Future<Either<Failure, void>> updataAccountBalance({
     required String id,
     required double newBalance,
-    required double previousBalance,
   }) async {
     try {
       final result = await localAccountService.updateAccountBalance(
         id: id,
         newBalance: newBalance,
-        previousBalance: newBalance,
       );
 
       return right(result);

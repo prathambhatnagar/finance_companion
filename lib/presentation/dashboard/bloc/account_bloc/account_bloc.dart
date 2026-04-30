@@ -9,6 +9,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     : super(AccountLoadingState()) {
     on<GetAccountsEvent>(_onGetAccountsEvent);
   }
+
   GetAccountsUsecase getAccountsUsecase;
 
   Future<void> _onGetAccountsEvent(

@@ -30,6 +30,7 @@ class AccountModel {
       name: name,
       balance: balance,
       colorHex: colorHex,
+      previous: previous,
     );
   }
 
@@ -39,6 +40,7 @@ class AccountModel {
       name: accountEntity.name,
       balance: accountEntity.balance,
       colorHex: accountEntity.colorHex,
+      previous: accountEntity.previous,
     );
   }
 }

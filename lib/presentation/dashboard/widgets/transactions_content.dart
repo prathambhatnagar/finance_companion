@@ -1,5 +1,7 @@
 import 'package:finance_companion/core/widgets/error_tile.dart';
 import 'package:finance_companion/core/widgets/loader.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_bloc.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_event.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_bloc.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_state.dart';
 import 'package:finance_companion/presentation/dashboard/widgets/transaction_tile.dart';
@@ -11,7 +13,12 @@ class TransactionsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TransactionBloc, TransactionState>(
+    return BlocConsumer<TransactionBloc, TransactionState>(
+      listener: (cotext, state) {
+        if (state is TransactionLoadedState) {
+          context.read<AccountBloc>().add(GetAccountsEvent());
+        }
+      },
       builder: (context, state) {
         if (state is TransactionLoadedState) {
           final transactions = state.transactionsList;

@@ -1,15 +1,22 @@
 import 'package:finance_companion/domain/entities/account/account_entity.dart';
 import 'package:flutter/material.dart';
 
-class CurrentBalanceCard extends StatelessWidget {
+class CurrentBalanceCard extends StatefulWidget {
   const CurrentBalanceCard({super.key, required this.account});
 
   final AccountEntity account;
 
   @override
+  State<CurrentBalanceCard> createState() => _CurrentBalanceCardState();
+}
+
+class _CurrentBalanceCardState extends State<CurrentBalanceCard> {
+  bool showBalance = false;
+
+  @override
   Widget build(BuildContext context) {
-    final previous = account.previous ?? account.balance;
-    final difference = account.balance - previous;
+    final previous = widget.account.previous ?? widget.account.balance;
+    final difference = widget.account.balance - previous;
     final isIncrease = difference >= 0;
     final percent = previous != 0 ? (difference / previous) * 100 : 0;
 
@@ -35,7 +42,7 @@ class CurrentBalanceCard extends StatelessWidget {
               height: 120,
               width: 120,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withAlpha(10),
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -52,7 +59,7 @@ class CurrentBalanceCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        account.name,
+                        widget.account.name,
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       SizedBox(width: 4),
@@ -64,13 +71,20 @@ class CurrentBalanceCard extends StatelessWidget {
 
               const Spacer(),
 
-              Text(
-                '\$${account.balance.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.5,
+              GestureDetector(
+                onTap: () => setState(() {
+                  showBalance = !showBalance;
+                }),
+                child: Text(
+                  showBalance
+                      ? '\$${widget.account.balance.toStringAsFixed(2)}'
+                      : 'XXXXXXXXX',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: showBalance ? FontWeight.bold : FontWeight.w400,
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                  ),
                 ),
               ),
 

@@ -38,7 +38,6 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     final result = await getAllTransactionUsecase.call(param: NoParam());
     result.fold(
       (failure) {
-        log('_onGetAllTransactionEvent ${failure.message}');
         emit(TransactionErrorState(message: failure.message));
       },
       (transactionsList) {
@@ -54,7 +53,6 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     final result = await addTransactionUsecase.call(param: event.transaction);
     result.fold((failure) {
       log('_onAddTransactionEvent ${failure.message}');
-
       emit(TransactionErrorState(message: failure.message));
     }, (_) => add(GetAllTransactionEvent()));
   }
