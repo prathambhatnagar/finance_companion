@@ -15,9 +15,14 @@ class TransactionLocalServiceImpl extends TransactionLocalService {
   final String _boxName = 'transactions_box';
 
   @override
-  Future<List<TransactionModel>> getAllTransactions() async {
+  Future<List<TransactionModel>> getAllTransactions({
+    int? month,
+    int? year,
+    TransactionTypeModel? type,
+  }) async {
     final transactionsBox = Hive.box(_boxName);
     final transactions = transactionsBox.values
+        .where((tx) => type == null ? true : tx.type == type)
         .cast<TransactionModel>()
         .toList();
     return transactions;

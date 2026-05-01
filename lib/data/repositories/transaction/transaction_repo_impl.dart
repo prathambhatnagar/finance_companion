@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:finance_companion/core/error/failure.dart';
 import 'package:finance_companion/data/models/transaction_model/transaction_model.dart';
@@ -23,7 +21,6 @@ class TransactionRepoImpl extends TransactionRepo {
       );
       return right(result);
     } catch (e) {
-      log(e.toString());
       return Left(LocalDatabaseFailure(message: e.toString()));
     }
   }

@@ -87,3 +87,17 @@ Future<void> init() async {
     });
   }
 }
+
+// Low Balance Alert
+// Most Spending category  bargraph
+// Top Spending Categories
+// Largest Transaction
+// Daily / Weekly Average Spending
+// Recurring Expenses (subscriptions, rent)
+// Overspending Alerts
+// Budget vs Actual Spending
+// “You spent 20% more on food this month”
+// auto pay / Subscription reminders
+// Income vs Expenses
+// Monthly Summary (this month vs last month)
+// Budget usage (e.g., 70% spent)

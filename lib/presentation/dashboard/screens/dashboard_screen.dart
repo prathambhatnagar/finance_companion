@@ -1,3 +1,4 @@
+import 'package:finance_companion/core/widgets/chart_widget/spending_categories.dart';
 import 'package:finance_companion/presentation/dashboard/screens/add_transaction_screen.dart';
 import 'package:finance_companion/presentation/dashboard/widgets/balance_carousel.dart';
 import 'package:finance_companion/presentation/dashboard/widgets/transactions_content.dart';
@@ -9,8 +10,17 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       body: SafeArea(
-        child: Column(children: [BalanceCarousel(), TransactionsContent()]),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              BalanceCarousel(),
+              TransactionsContent(),
+              SpendingCategories(),
+            ],
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

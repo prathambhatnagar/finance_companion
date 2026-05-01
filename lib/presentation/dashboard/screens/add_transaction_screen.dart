@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:finance_companion/core/utility/id_generator.dart';
 import 'package:finance_companion/core/widgets/loader.dart';
@@ -13,7 +11,6 @@ import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/t
 import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/adapters.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({super.key});
@@ -284,7 +281,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     return DropdownButtonFormField<AccountEntity>(
                       isExpanded: true,
                       borderRadius: BorderRadius.circular(10),
-                      value: selectedAccount,
+                      initialValue: selectedAccount,
                       decoration: InputDecoration(
                         hintText: "Select Account",
                         border: OutlineInputBorder(
