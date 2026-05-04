@@ -8,6 +8,7 @@ import 'package:finance_companion/domain/usecases/transaction/delete_transaction
 import 'package:finance_companion/domain/usecases/transaction/get_all_transaction_usecase.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_bloc.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_event.dart';
+import 'package:finance_companion/presentation/dashboard/bloc/dashboard_cubit/dashboard_cubit.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_bloc.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_event.dart';
 import 'package:finance_companion/presentation/dashboard/screens/dashboard_screen.dart';
@@ -42,6 +43,14 @@ class MyApp extends StatelessWidget {
           create: (context) => AccountBloc(
             getAccountsUsecase: serviceLocator<GetAccountsUsecase>(),
           )..add(GetAccountsEvent()),
+        ),
+
+        BlocProvider(
+          create: (context) => DashboardCubit(
+            getAccountsUsecase: serviceLocator<GetAccountsUsecase>(),
+            getAllTransactionUsecase:
+                serviceLocator<GetAllTransactionUsecase>(),
+          )..predictMonthEndBalance(),
         ),
       ],
       child: MaterialApp(

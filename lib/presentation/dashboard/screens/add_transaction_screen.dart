@@ -40,7 +40,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   AccountEntity? selectedAccount;
 
   TextEditingController amountController = TextEditingController();
-
   TextEditingController noteController = TextEditingController();
 
   @override
@@ -68,11 +67,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   children: const [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 50),
-                      child: Text('Income', style: TextStyle(fontSize: 16)),
+                      child: Text('Expense', style: TextStyle(fontSize: 16)),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 50),
-                      child: Text('Expense', style: TextStyle(fontSize: 16)),
+                      child: Text('Income', style: TextStyle(fontSize: 16)),
                     ),
                   ],
                 ),
@@ -350,8 +349,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       note: noteController.text,
                       amount: double.parse(amountController.text),
                       type: isSelected[0]
-                          ? TransactionTypeEntity.income
-                          : TransactionTypeEntity.expense,
+                          ? TransactionTypeEntity.expense
+                          : TransactionTypeEntity.income,
                       timeStamp: selectedDate ?? DateTime.now(),
                       category: selectedCategory,
                       account: selectedAccount!,

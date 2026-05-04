@@ -33,7 +33,7 @@ final List<TransactionCategoryEntity> spendingCategories = [
   ),
   TransactionCategoryEntity(
     id: '4',
-    name: 'Transportation',
+    name: 'Transport',
     iconPath: '',
     colorHex: 0xFFFFA07A,
   ),

@@ -1,5 +1,6 @@
 import 'package:finance_companion/core/widgets/error_tile.dart';
 import 'package:finance_companion/core/widgets/loader.dart';
+import 'package:finance_companion/core/widgets/shadow_container.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_bloc.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/account_bloc/account_event.dart';
 import 'package:finance_companion/presentation/dashboard/bloc/transaction_bloc/transaction_bloc.dart';
@@ -8,8 +9,21 @@ import 'package:finance_companion/presentation/dashboard/widgets/transaction_til
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TransactionsContent extends StatelessWidget {
+class TransactionsContent extends StatefulWidget {
   const TransactionsContent({super.key});
+
+  @override
+  State<TransactionsContent> createState() => _TransactionsContentState();
+}
+
+class _TransactionsContentState extends State<TransactionsContent> {
+  ValueNotifier<bool> showAll = ValueNotifier<bool>(false);
+
+  @override
+  void dispose() {
+    showAll.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +35,7 @@ class TransactionsContent extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is TransactionLoadedState) {
-          final transactions = state.transactionsList;
+          final transactions = state.transactions;
           if (transactions.isEmpty) return EmptyTransaction();
           return Column(
             children: [
@@ -37,42 +51,48 @@ class TransactionsContent extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    TextButton(
-                      child: Text('Show all', style: TextStyle(fontSize: 16)),
-                      onPressed: () {},
+                    ValueListenableBuilder(
+                      valueListenable: showAll,
+                      builder: (context, value, child) {
+                        return TextButton(
+                          child: Text(
+                            showAll.value ? 'Show less' : 'Show more',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          onPressed: () => showAll.value = !showAll.value,
+                        );
+                      },
                     ),
                   ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade300,
-                        blurRadius: 10,
-                        spreadRadius: 5,
+                child: ValueListenableBuilder(
+                  valueListenable: showAll,
+                  builder: (context, state, child) {
+                    return ShadowContainer(
+                      child: AnimatedSize(
+                        duration: Duration(milliseconds: 300),
+                        child: ListView.separated(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: transactions.length < 5 || showAll.value
+                              ? transactions.length
+                              : 5,
+                          itemBuilder: (context, index) =>
+                              TransactionTile(transaction: transactions[index]),
+                          separatorBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 18),
+                            child: Divider(
+                              height: 0,
+                              color: Colors.grey.shade300,
+                            ),
+                          ),
+                        ),
                       ),
-                    ],
-                    border: Border.all(width: 2, color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ListView.separated(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: transactions.length > 5
-                        ? 5
-                        : transactions.length,
-
-                    itemBuilder: (context, index) =>
-                        TransactionTile(transaction: transactions[index]),
-                    separatorBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18),
-                      child: Divider(height: 0, color: Colors.grey.shade300),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
             ],

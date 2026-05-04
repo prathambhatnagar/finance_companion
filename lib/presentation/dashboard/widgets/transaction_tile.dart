@@ -21,6 +21,7 @@ class TransactionTile extends StatelessWidget {
           curve: Curves.easeInOut,
           duration: Duration(milliseconds: 300),
           child: GestureDetector(
+            onTap: () => showDelete.value = false,
             onLongPress: () => showDelete.value = true,
             child: Column(
               children: [
@@ -50,7 +51,7 @@ class TransactionTile extends StatelessWidget {
                   subtitle: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      if (transaction.note.isNotEmpty)
+                      if (transaction.note.isNotEmpty) ...[
                         Text(
                           transaction.note,
                           maxLines: 1,
@@ -61,9 +62,10 @@ class TransactionTile extends StatelessWidget {
                           ),
                         ),
 
-                      const SizedBox(width: 8),
-                      Icon(Icons.circle, size: 8, color: Colors.grey),
-                      const SizedBox(width: 8),
+                        const SizedBox(width: 8),
+                        Icon(Icons.circle, size: 8, color: Colors.grey),
+                        const SizedBox(width: 8),
+                      ],
 
                       Text(
                         _formatDate(transaction.timeStamp),
@@ -105,15 +107,29 @@ class TransactionTile extends StatelessWidget {
                         DeleteTransactionEvent(transaction: transaction),
                       );
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.delete),
-                        Text(
-                          'Delete Transaction',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.red,
+                            child: Icon(Icons.delete, color: Colors.white),
+                          ),
+                          SizedBox(width: 10),
+                          Container(
+                            padding: EdgeInsets.all(7),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.red, width: 2),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              'Delete Transaction',
+                              style: TextStyle(fontSize: 16, letterSpacing: 1),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

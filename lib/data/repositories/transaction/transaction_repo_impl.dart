@@ -42,13 +42,13 @@ class TransactionRepoImpl extends TransactionRepo {
   }
 
   // @override
-  // Future<Either<Failure, List<TransactionEntity>>> getAllCreditTransactions() {
+  // Future<Either<Failure, List<TransactionEntity>>> getAllSavingsTransactions() {
   //   // TODO: implement getAllCreditTransactions
   //   throw UnimplementedError();
   // }
 
   // @override
-  // Future<Either<Failure, List<TransactionEntity>>> getAllDebitTransactions() {
+  // Future<Either<Failure, List<TransactionEntity>>> getAllExpencesTransactions() {
   //   // TODO: implement getAllDebitTransactions
   //   throw UnimplementedError();
   // }

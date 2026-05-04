@@ -10,6 +10,6 @@ class TransactionErrorState extends TransactionState {
 }
 
 class TransactionLoadedState extends TransactionState {
-  TransactionLoadedState({required this.transactionsList});
-  final List<TransactionEntity> transactionsList;
+  TransactionLoadedState({required this.transactions});
+  final List<TransactionEntity> transactions;
 }

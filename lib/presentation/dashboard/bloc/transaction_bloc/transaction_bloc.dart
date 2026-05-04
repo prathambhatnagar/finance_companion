@@ -41,7 +41,7 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         emit(TransactionErrorState(message: failure.message));
       },
       (transactionsList) {
-        emit(TransactionLoadedState(transactionsList: transactionsList));
+        emit(TransactionLoadedState(transactions: transactionsList));
       },
     );
   }

@@ -86,15 +86,13 @@ class _CurrentBalanceCardState extends State<CurrentBalanceCard> {
                     ),
                   ],
                 ),
-
                 const Spacer(),
-
                 ValueListenableBuilder(
                   valueListenable: showBalance,
                   builder: (context, value, child) {
                     return Text(
                       showBalance.value
-                          ? '\$${format.format(widget.account.balance)}'
+                          ? '\$ ${format.format(widget.account.balance)}'
                           : 'XXXXXXXX',
                       style: TextStyle(
                         fontSize: 30,
@@ -107,43 +105,49 @@ class _CurrentBalanceCardState extends State<CurrentBalanceCard> {
                     );
                   },
                 ),
-
                 const SizedBox(height: 8),
-
-                Row(
-                  children: [
-                    Text(
-                      isIncrease ? 'Increase' : 'Decrease',
-                      style: const TextStyle(color: Colors.white70),
-                    ),
-                    const SizedBox(width: 6),
-                    Icon(
-                      isIncrease ? Icons.arrow_upward : Icons.arrow_downward,
-                      size: 16,
-                      color: isIncrease ? Colors.greenAccent : Colors.redAccent,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${percent.toStringAsFixed(1)}%',
-                      style: TextStyle(
-                        color: isIncrease
-                            ? Colors.greenAccent
-                            : Colors.redAccent,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(),
-                    if (!showBalance.value) ...[
-                      Text(
-                        'Tap to reveal',
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          letterSpacing: 1.2,
-                          fontWeight: FontWeight.w400,
+                ValueListenableBuilder(
+                  valueListenable: showBalance,
+                  builder: (context, state, child) {
+                    return Row(
+                      children: [
+                        Text(
+                          isIncrease ? 'Increase' : 'Decrease',
+                          style: const TextStyle(color: Colors.white70),
                         ),
-                      ),
-                    ],
-                  ],
+                        const SizedBox(width: 6),
+                        Icon(
+                          isIncrease
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward,
+                          size: 16,
+                          color: isIncrease
+                              ? Colors.greenAccent
+                              : Colors.redAccent,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${percent.toStringAsFixed(1)}%',
+                          style: TextStyle(
+                            color: isIncrease
+                                ? Colors.greenAccent
+                                : Colors.redAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        if (!showBalance.value)
+                          Text(
+                            'Tap to reveal',
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              letterSpacing: 1.2,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
